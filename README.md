@@ -1,7 +1,5 @@
 Netty-socketio Overview
 ===
-[![Maven Central](https://img.shields.io/maven-central/v/com.corundumstudio.socketio/netty-socketio.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.corundumstudio.socketio/netty-socketio/)
-
 This project is an open-source Java implementation of [Socket.IO](http://socket.io/) server. Based on [Netty](http://netty.io/) server framework.  
 
 Checkout [Demo project](https://github.com/mrniko/netty-socketio-demo)
@@ -50,11 +48,38 @@ Recent Releases
 ================================
 #### Please Note: trunk is current development branch.
 
+#### 06-Jul-2018 - version 1.7.16 released  
+Fixed - non thread-safe ACK handling (thanks to dawnbreaks)  
+Fixed - inactive long-polling channels cause memory leak (thanks to dawnbreaks)  
+Fixed - websocket CloseFrame processing (thanks to hangsu.cho)  
+Fixed - WebSocketTransport NPE  
+
+#### 15-May-2018 - version 1.7.15 released  
+
+Fixed - Session ID is not unique anymore  
+Fixed - fixed underlying connection not closing on ping timeout  
+Fixed - the "fin_close" problem  
+
+#### 26-Feb-2018 - version 1.7.14 released  
+Feature - added local socket address for the connection (thanks to @SergeyGrigorev)  
+Feature - `addPingListener` method added (thanks to @lovebing)  
+Feature - add ThreadFactory for HashedWheelTimer (thanks to @hand515)  
+Fixed - changed SO_LINGER to be handled as child channel (not server channel) option (thanks to @robymus)  
+Fixed - ByteBuf leak if binary attachments are used  
+Fixed - restore session from Cookie (thanks to @wuxudong)  
+Fixed - NumberFormatException when b64 is bool value (thanks to @vonway)  
+Fixed - data encoding for polling transport  
+
+#### 20-Sep-2017 - version 1.7.13 released  
+Feature - Added option to change the SSL KeyFactoryAlgorithm using Configuration (thanks to @robymus)  
+Improvement - Binary ack handling improvements (thanks to Sergey Bushik)  
+Fixed - Failed to mark a promise as success because it has succeeded already (thanks to @robymus)
+
 #### 27-Aug-2016 - version 1.7.12 released  
-Feature - `SocketIOServer.removeAllListeners` method added
-Feature - `BroadcastOperations.sendEvent` method with `excludedClient` param added
-Improvement - Redisson updated to 2.4.0
-Fixed - memory leak in Namespace object (thanks to @CrazyIvan007)
+Feature - `SocketIOServer.removeAllListeners` method added  
+Feature - `BroadcastOperations.sendEvent` method with `excludedClient` param added  
+Improvement - Redisson updated to 2.4.0  
+Fixed - memory leak in Namespace object (thanks to @CrazyIvan007)  
 
 
 #### 13-Jul-2016 - version 1.7.11 released  

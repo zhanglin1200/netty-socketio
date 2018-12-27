@@ -15,6 +15,7 @@
  */
 package com.corundumstudio.socketio;
 
+import com.corundumstudio.socketio.listener.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -34,11 +35,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.corundumstudio.socketio.listener.ClientListeners;
-import com.corundumstudio.socketio.listener.ConnectListener;
-import com.corundumstudio.socketio.listener.DataListener;
-import com.corundumstudio.socketio.listener.DisconnectListener;
-import com.corundumstudio.socketio.listener.MultiTypeEventListener;
 import com.corundumstudio.socketio.namespace.Namespace;
 import com.corundumstudio.socketio.namespace.NamespacesHub;
 
@@ -84,8 +80,8 @@ public class SocketIOServer implements ClientListeners {
     /**
      * Get client by uuid from default namespace
      *
-     * @param uuid
-     * @return
+     * @param uuid - id of client
+     * @return client
      */
     public SocketIOClient getClient(UUID uuid) {
         return namespacesHub.get(Namespace.DEFAULT_NAME).getClient(uuid);
@@ -108,8 +104,8 @@ public class SocketIOServer implements ClientListeners {
      * Get broadcast operations for clients within
      * room by <code>room</code> name
      *
-     * @param room
-     * @return
+     * @param room - name of room
+     * @return broadcast operations
      */
     public BroadcastOperations getRoomOperations(String room) {
         Iterable<SocketIOClient> clients = namespacesHub.getRoomClients(room);
@@ -125,6 +121,8 @@ public class SocketIOServer implements ClientListeners {
 
     /**
      * Start server asynchronously
+     * 
+     * @return void
      */
     public Future<Void> startAsync() {
         log.info("Session store / pubsub factory used: {}", configCopy.getStoreFactory());
@@ -171,8 +169,8 @@ public class SocketIOServer implements ClientListeners {
             bootstrap.childOption(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(config.getTcpReceiveBufferSize()));
         }
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, config.isTcpKeepAlive());
+        bootstrap.childOption(ChannelOption.SO_LINGER, config.getSoLinger());
 
-        bootstrap.option(ChannelOption.SO_LINGER, config.getSoLinger());
         bootstrap.option(ChannelOption.SO_REUSEADDR, config.isReuseAddress());
         bootstrap.option(ChannelOption.SO_BACKLOG, config.getAcceptBackLog());
     }
@@ -244,6 +242,11 @@ public class SocketIOServer implements ClientListeners {
     @Override
     public void addConnectListener(ConnectListener listener) {
         mainNamespace.addConnectListener(listener);
+    }
+
+    @Override
+    public void addPingListener(PingListener listener) {
+        mainNamespace.addPingListener(listener);
     }
 
     @Override

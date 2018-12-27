@@ -62,6 +62,8 @@ public class PacketListener {
             } else {
                 client.getBaseClient().schedulePingTimeout();
             }
+            Namespace namespace = namespacesHub.get(packet.getNsp());
+            namespace.onPing(client);
             break;
         }
 
@@ -89,7 +91,8 @@ public class PacketListener {
                 client.getBaseClient().send(packet, transport);
             }
 
-            if (packet.getSubType() == PacketType.ACK) {
+            if (packet.getSubType() == PacketType.ACK
+                    || packet.getSubType() == PacketType.BINARY_ACK) {
                 ackManager.onAck(client, packet);
             }
 
